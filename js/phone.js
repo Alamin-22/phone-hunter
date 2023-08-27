@@ -1,4 +1,4 @@
-const loadPhone = async (searchText=9, isShowAll) => {
+const loadPhone = async (searchText = 9, isShowAll) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`)
     const data = await res.json();
     const phones = data.data
@@ -25,7 +25,7 @@ const displayPhones = (phones, isShowAll) => {
         phones = phones.slice(0, 9);
     }
     phones.forEach(phone => {
-        console.log(phone);
+        // console.log(phone);
         // 2. create a div
         const phoneCard = document.createElement('div');
         phoneCard.classList = `card bg-gray-300 shadow-xl`;
@@ -38,7 +38,7 @@ const displayPhones = (phones, isShowAll) => {
                         <h2 class="card-title">${phone.phone_name}</h2>
                         <p>There are many variations of passages of available, but the majority have suffered</p>
                         <div class="card-actions">
-                            <button onclick="handleShowDetails('${phone.slug}');show_detail_modal.showModal()"  class="btn btn-primary">Show Details</button>
+                            <button onclick="handleShowDetails('${phone.slug}')" class="btn btn-primary">Show Details</button>
                         </div>
                     </div>
 
@@ -76,11 +76,37 @@ const handleShowAll = () => {
 }
 // handle show Details
 const handleShowDetails = async (id) => {
-    console.log('Show Details btn is working:', id)
+    // console.log('Show Details btn is working:', id)
     // load single phone data
-    const res = await fetch(`https://openapi.programming-hero.com/api/phone/apple_iphone_13_pro_max-11089 ${id}`)
+    const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`)
     const data = await res.json();
-    console.log(data) 
+    // console.log(data)
+    const phone = data.data
+    ShowPhoneDetails(phone)
+}
+
+const ShowPhoneDetails = (phone) => {
+    console.log(phone)
+    const phoneName = document.getElementById("show-detail-phone-name");
+    phoneName.innerText = phone.name;
+
+
+    const showDetailContainer = document.getElementById("show-detail-container");
+    showDetailContainer.innerHTML = `
+    <img class="mx-auto" src="${phone.image}">
+    <div class= "text-lg space-y-2 p-8">
+        <p> <span class="font-bold text-xl">Storage:  </span>${phone.mainFeatures.storage}</p>
+        <p> <span class="font-bold text-xl">Display Size:  </span>${phone.mainFeatures.displaySize}</p>
+        <p> <span class="font-bold text-xl">Chipset:  </span>${phone.mainFeatures.chipSet}</p>
+        <p> <span class="font-bold text-xl">Memory:  </span>${phone.mainFeatures.memory}</p>
+        <p> <span class="font-bold text-xl">Model:  </span>${phone.slug}</p>
+        <p> <span class="font-bold text-xl">Release data :  </span>${phone.releaseDate}</p>
+        <p> <span class="font-bold text-xl">Brand:  </span>${phone.brand}</p>
+        <p> <span class="font-bold text-xl">GPS:  </span>${phone.others.GPS}</p>
+    </div>
+    `
+    // show the modal
+    show_detail_modal.showModal()
 }
 
 loadPhone();
